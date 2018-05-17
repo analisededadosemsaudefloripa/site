@@ -1,0 +1,17 @@
+name: "Saúde Floripa"
+output_dir: "_site"
+navbar:
+  title: "Saúde Floripa"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "About"
+      href: about.html
+    - text: "Atenção Primária"
+      href: consultas_por_idade_rmd.html
+output:
+  html_document:
+    highlight: textmate
+    include:
+      after_body: footer.html
+    css: styles.css
