@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Atenção Primária em Florianópolis</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-1.1/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Saúde Floripa</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="consultas_por_idade_rmd.html">Atenção Primária</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Atenção Primária em Florianópolis</h1>
+
+</div>
+
+
+<pre class="r"><code>knitr::opts_chunk$set(echo = T)
+options(scipen=100)
+options(digits=2)</code></pre>
+<pre class="r"><code>library(readxl)
+library(tidyverse)
+library(reshape2)
+library(plotly)
+library(plyr)
+library(readr)</code></pre>
+<pre class="r"><code>consultas &lt;- read_csv(&quot;C:/Users/hp1806/Google Drive/RStudio/consulta_por_idade_aps/consultas_idade_unidade.csv&quot;)
+
+
+pop_fpolis &lt;- read_delim(&quot;C:/Users/hp1806/Google Drive/RStudio/consulta_por_idade_aps/pop_fpolis.csv&quot;, 
+    &quot;;&quot;, escape_double = FALSE, trim_ws = TRUE)</code></pre>
+<pre class="r"><code>agregado &lt;- consultas[, c(2,4:8)] 
+agregado &lt;- group_by(agregado, UNIDADE,IDADE) %&gt;% 
+    summarise_all(funs(sum))
+
+idade &lt;- agregado[,-1]
+idade &lt;- aggregate(idade[,-1], by = idade[,1], FUN = sum)
+
+idade$FAIXA &lt;- NA
+idade$FAIXA[which(idade$IDADE &lt;= 4)] &lt;- &quot;0 a 4 anos&quot;
+idade$FAIXA[which(idade$IDADE &gt;= 5 &amp; idade$IDADE &lt;= 9)] &lt;- &quot;05 a 9 anos&quot;
+idade$FAIXA[which(idade$IDADE &gt;= 10 &amp; idade$IDADE &lt;= 14)] &lt;- &quot;10 a 14 anos&quot;
+idade$FAIXA[which(idade$IDADE &gt;= 15 &amp; idade$IDADE &lt;= 19)] &lt;- &quot;15 a 19 anos&quot;
+idade$FAIXA[which(idade$IDADE &gt;= 20 &amp; idade$IDADE &lt;= 24)] &lt;- &quot;20 a 24 anos&quot;
+idade$FAIXA[which(idade$IDADE &gt;= 25 &amp; idade$IDADE &lt;= 29)] &lt;- &quot;25 a 29 anos&quot;
+idade$FAIXA[which(idade$IDADE &gt;= 30 &amp; idade$IDADE &lt;= 34)] &lt;- &quot;30 a 34 anos&quot;
+idade$FAIXA[which(idade$IDADE &gt;= 35 &amp; idade$IDADE &lt;= 39)] &lt;- &quot;35 a 39 anos&quot;
+idade$FAIXA[which(idade$IDADE &gt;= 40 &amp; idade$IDADE &lt;= 44)] &lt;- &quot;40 a 44 anos&quot;
+idade$FAIXA[which(idade$IDADE &gt;= 45 &amp; idade$IDADE &lt;= 49)] &lt;- &quot;45 a 49 anos&quot;
+idade$FAIXA[which(idade$IDADE &gt;= 50 &amp; idade$IDADE &lt;= 54)] &lt;- &quot;50 a 54 anos&quot;
+idade$FAIXA[which(idade$IDADE &gt;= 55 &amp; idade$IDADE &lt;= 59)] &lt;- &quot;55 a 59 anos&quot;
+idade$FAIXA[which(idade$IDADE &gt;= 60 &amp; idade$IDADE &lt;= 64)] &lt;- &quot;60 a 64 anos&quot;
+idade$FAIXA[which(idade$IDADE &gt;= 65 &amp; idade$IDADE &lt;= 69)] &lt;- &quot;65 a 69 anos&quot;
+idade$FAIXA[which(idade$IDADE &gt;= 70 &amp; idade$IDADE &lt;= 74)] &lt;- &quot;70 a 74 anos&quot;
+idade$FAIXA[which(idade$IDADE &gt;= 75 &amp; idade$IDADE &lt;= 79)] &lt;- &quot;75 a 79 anos&quot;
+idade$FAIXA[which(idade$IDADE &gt;= 80)] &lt;- &quot;80 anos ou mais&quot;
+
+idade_faixa &lt;- idade[,-1]
+idade_faixa$FAIXA &lt;- as.factor(idade_faixa$FAIXA)
+idade_faixa &lt;- aggregate(idade_faixa[,-5], by = list(idade_faixa$FAIXA), FUN = sum)
+names(idade_faixa)[1] &lt;- &quot;FAIXA&quot;</code></pre>
+<div id="utilizacao-da-atencao-primaria" class="section level1">
+<h1>Utilização da atenção primária</h1>
+<p>Em 2017 XXXX pessoas utilizaram a atenção primária de Florianópolis, com uma maior utilização por pessoas do sexo feminino em praticamente todas as idades, com exceção de crianças de 0-4 anos e idosos, onde a utilização entre os sexos é semelhante.</p>
+<p><strong>Figura-1:</strong> Distribuição etária dos usuários da atenção primária de Florianópolis</p>
+<pre class="r"><code>idade_usuario &lt;- idade[,c(1,2,3)]
+idade_usuario &lt;- melt(idade_usuario, id = c(&quot;IDADE&quot;))
+names(idade_usuario)&lt;- c(&quot;IDADE&quot;, &quot;VARIAVEL&quot;, &quot;USUARIOS&quot;)
+
+ggplot(idade_usuario, aes(x=IDADE, y=USUARIOS, col = VARIAVEL))+
+        geom_line()+
+        scale_x_continuous(breaks = seq(0,120,10))+
+        scale_y_continuous(breaks = seq(0,17000,1000))+
+        theme_bw()</code></pre>
+<p><img src="consultas_por_idade_rmd_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><strong>Figura-2:</strong> Pirâmide etária dos usuários da atenção primária de Florianópolis</p>
+<pre class="r"><code>idade_usuario1 &lt;- idade[,c(1,2,3)]
+idade_usuario1$USU_HOMEM &lt;- -1*idade_usuario1$USU_HOMEM
+idade_usuario1 &lt;- melt(idade_usuario1, id = c(&quot;IDADE&quot;))
+names(idade_usuario1)&lt;- c(&quot;IDADE&quot;, &quot;VARIAVEL&quot;, &quot;USUARIOS&quot;)
+
+
+idade_usuario1$VARIAVEL &lt;- as.character(idade_usuario$VARIAVEL)
+
+ggplot(idade_usuario1, aes(x = IDADE, y = USUARIOS, fill = VARIAVEL)) + 
+  geom_bar(subset = .(VARIAVEL == &quot;USU_HOMEM&quot;), stat = &quot;identity&quot;) + 
+  geom_bar(subset = .(VARIAVEL == &quot;USU_MULHER&quot;), stat = &quot;identity&quot;) + 
+  scale_y_continuous(breaks = seq(-20000, 20000, 5000), 
+                     labels = paste0(as.character(c(seq(20, 0, -5), seq(5, 20, 5))), &quot;m&quot;)) + 
+  coord_flip() + 
+  scale_fill_brewer(palette = &quot;Set1&quot;) + 
+  theme_bw()+
+  ylab(&quot;Milhares de Usuários&quot;)+
+  xlab(&quot;Idade&quot;)</code></pre>
+<p><img src="consultas_por_idade_rmd_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+</div>
+
+<p>Copyright &copy; 2016 Skynet, Inc. All rights reserved.</p>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
